@@ -31,10 +31,12 @@ def getShipments():
         jsonResponse = response.json()
         shipmentsjson = jsonResponse['shipments']
         shipmentId = None
+        ids = r.get('shipmentId').decode('utf-8').split(",")
         for shipment in shipmentsjson:
             obj = Shipments.objects.create(shipmentId = shipment['shipmentId'], shipmentDate = shipment['shipmentDate'])
             shipmentId += shipment['shipmentId'] + ','
             obj.save()
+        
         shipmentId = shipmentId[:-1]
         r.set('shipmentId', shipmentId, 90)
         scheduleShip(now + timedelta(minutes = 2))
