@@ -2,7 +2,7 @@ from django.db import models
 
 
 class CustomerDetails(models.Model):
-    shipmentId = models.ForeignKey('Shipments', on_delete=models.CASCADE)
+    shipmentId = models.IntegerField(max_length=30)
     salutationCode = models.IntegerField(max_length=10)
     firstName = models.CharField(max_length=50)
     surname = models.CharField(max_length=50)
@@ -24,7 +24,7 @@ class CustomerDetails(models.Model):
         return self.shipmentId
 
 class BillingDetails(models.Model):
-    shipmentId = models.ForeignKey('Shipments', on_delete=models.CASCADE)
+    shipmentId = models.IntegerField(max_length=30)
     salutationCode = models.IntegerField(max_length=10)
     firstName = models.CharField(max_length=50)
     surname = models.CharField(max_length=50)
@@ -46,12 +46,12 @@ class BillingDetails(models.Model):
         return self.shipmentId
 
 class Shipments(models.Model):
-    shipmentId = models.IntegerField(max_length=30)
+    shipmentId = models.IntegerField(max_length=30, unique=True)
     shipmentDate = models.DateTimeField(max_length=35)
-    
+    shipmentDate = models.CharField(max_length=30, null=True)
 
 class ShipmentItems(models.Model):
-    shipmentId = models.ForeignKey('Shipments', on_delete=models.CASCADE)
+    shipmentId = models.IntegerField(max_length=30)
     orderItemId = models.IntegerField(max_length=30)
     orderId = models.IntegerField(max_length=30)
     orderDate = models.DateTimeField(max_length=35)
@@ -61,13 +61,13 @@ class ShipmentItems(models.Model):
     quantity = models.IntegerField(max_length=10)
     offerPrice = models.FloatField(max_length=20)
     offerCondition = models.CharField(max_length=10)
-    offerReference = models.CharField(max_length=30)
+    offerReference = models.CharField(max_length=30, null=True)
     fulfilmentMethod = models.CharField(max_length=10)
     def __str__(self):
         return self.shipmentId
 
 class Transport(models.Model):
-    shipmentId = models.ForeignKey('Shipments', on_delete=models.CASCADE)
+    shipmentId = models.IntegerField(max_length=30)
     transportId =  models.IntegerField(max_length=30)
     transporterCode = models.CharField(max_length=10)
     trackAndTrace = models.CharField(max_length=30)

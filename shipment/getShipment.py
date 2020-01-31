@@ -30,12 +30,17 @@ def getShipments():
     else:
         jsonResponse = response.json()
         shipmentsjson = jsonResponse['shipments']
-        shipmentId = None
-        ids = r.get('shipmentId').decode('utf-8').split(",")
+        shipmentId = ''
+        ids = r.get('shipmentId')
+        if ids != None:
+            ids = ids.decode('utf-8').split(",")
         for shipment in shipmentsjson:
-            obj = Shipments.objects.create(shipmentId = shipment['shipmentId'], shipmentDate = shipment['shipmentDate'])
-            shipmentId += shipment['shipmentId'] + ','
-            obj.save()
+            shipmentId = shipmentId + str(shipment['shipmentId']) + ','
+            if not Shipments.objects.filter(shipmentId = shipment['shipmentId'], shipmentDate = shipment['shipmentDate']).exists():
+                obj = Shipments.objects.create(shipmentId = shipment['shipmentId'], shipmentDate = shipment['shipmentDate'])
+                shipmentId = shipmentId + str(shipment['shipmentId']) + ','
+                obj.save()
+            
         
         shipmentId = shipmentId[:-1]
         r.set('shipmentId', shipmentId, 90)
@@ -44,4 +49,4 @@ def getShipments():
 
 def scheduleShip(schTime):
     scheduler = Scheduler(connection=Redis())
-    scheduler.enqueue_at(schTime , getAccessToken)
+    scheduler.enqueue_at(schTime , getShipments)
