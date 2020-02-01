@@ -3,24 +3,12 @@
 
 {% block content %}
 <title>Home</title>
-<h1 class="align-content-center"></h1>
-<table class="table table-bordered">
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Shipment ID</th>
-      <th scope="col">Shipment Date</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for item in query_results %}
-        <tr> 
-            <th scope="row">{{ item.id }}</th>
-            <td>{{ item.shipmentId }}</td>
-            <td>{{ item.shipmentDate }}</td>
-        </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="container align-self-center">
+    <div class="btn">
+        <a class="btn btn-primary" href="{% url 'shipdetail' %}">Shipment Details</a>
+        <a class="btn btn-primary" href="{% url 'customer' %}">Customer</a>
+        <a class="btn btn-primary" href="{% url 'transport' %}">Transport</a>
+    </div>
+</div>
 {% endblock content %}
 

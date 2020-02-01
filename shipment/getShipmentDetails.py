@@ -1,34 +1,34 @@
 import requests 
 import json
 from datetime import datetime, timedelta
-from redis import Redis, StrictRedis
+from redis import Redis
 from rq import Queue
-from rq_scheduler import Scheduler
-from .models import Shipments, ShipmentItems, BillingDetails, CustomerDetails, Transport
+#from rq_scheduler import Scheduler
+import django_rq
+from shipment.models import Shipments, ShipmentItems, BillingDetails, CustomerDetails, Transport
 from django.db.models import *
 from django.db.models.functions import *
-from django.http import JsonResponse
 
-host = "https://api.bol.com/retailer/shipments/"
+r = Redis(host='127.0.0.1', port = 6379, db = 0)
+host = r.get('SHIPMENT_HOST').decode('utf-8')
 
 def fetchShipmentDetails():
     
     #r = StrictRedis(host='localhost', port=6379, db=1)
-    r = Redis(host='127.0.0.1', port = 6379, db = 0)
+    #r = Redis(host='127.0.0.1', port = 6379, db = 0)
     headers = {
     'Accept': 'application/vnd.retailer.v3+json',
     'Authorization': 'Bearer ' + r.get('access_token').decode('utf-8')
     }
     try:
         response = None
-        ids = r.get('shipmentId').decode('utf-8').split(",")
-        
+        ids = r.get('shipmentId')
+        if ids != None:
+            ids = ids.decode('utf-8').split(",")
         jsonKeys = ['shipmentItems','transport','customerDetails','billingDetails']
         
         for id in ids:
-            url = host + '' + id
-            response = requests.request("GET", url, headers = headers)
-            jsonResponse = response.json()
+            url = host + '' + defaultponse.json()
             now = datetime.now()
             for key in jsonKeys:
                 jsonItems = jsonResponse[key]
@@ -81,7 +81,8 @@ def fetchShipmentDetails():
                 
                     
                 
-        scheduleShipdetails(now + timedelta(minutes = 1))
+        #scheduleShipdetails(now + timedelta(minutes = 1))
+        scheduleShipdetails(120)
             
         
         # optional: raise exception for status code
@@ -92,5 +93,6 @@ def fetchShipmentDetails():
         
 
 def scheduleShipdetails(schTime):
-    scheduler = Scheduler(connection=Redis())
-    scheduler.enqueue_at(schTime , fetchShipmentDetails)
+    #scheduler = Scheduler(connection=Redis())
+    scheduler = django_rq.get_scheduler('default')
+    scheduler.enqueue_in(timedelta(seconds=schTime) , fetchShipmentDetails)

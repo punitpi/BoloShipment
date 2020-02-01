@@ -18,7 +18,8 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('shipment/shipstatus/', views.shipstatus, name='shipstatus'),
-    path('shipment/transport/', views.transport, name='transport'),
-    path('shipment/customer/', views.customer, name='customer')
+    path('index/', views.index, name='index'),
+    path('transport/', views.transport, name='transport'),
+    path('customer/', views.customer, name='customer'),
+    path('shipdetail/', views.shipdetail, name='shipdetail')
 ]

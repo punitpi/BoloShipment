@@ -3,6 +3,31 @@
 
 {% block content %}
 <title>Transport</title>
-<h1 class="align-content-center"></h1>
-
+<h1 class="align-content-center">Transport Details</h1>
+<table class="table table-bordered">
+  <thead class="thead-dark">
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Shipment ID</th>
+        <th scope="col">Transport Id</th>
+        <th scope="col">Transporter Code</th>
+        <th scope="col">Track And Trace</th>
+        <th scope="col">Shipping Label Id</th>
+        <th scope="col">Shipping Label Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in query_results %}
+        <tr> 
+            <th scope="row">{{ item.id }}</th>
+            <td>{{ item.shipmentId }}</td>
+            <td>{{ item.transportId }}</td>
+            <td>{{ item.transporterCode }}</td>
+            <td>{{ item.trackAndTrace }}</td>
+            <td>{{ item.shippingLabelId }}</td>
+            <td>{{ item.shippingLabelCode }}</td>
+        </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock content %}

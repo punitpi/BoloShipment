@@ -3,6 +3,113 @@
 
 {% block content %}
 <title>Customer</title>
-<h1 class="align-content-center"></h1>
+<div id="page-top">
 
+  <h1 class="align-content-center">Billing Details</h1>
+  <table class="table table-bordered">
+    <thead class="thead-dark">
+      <tr>
+          <th scope="col">#</th>
+          <th scope="col">shipmentId</th>
+          <th scope="col">salutationCode</th>
+          <th scope="col">firstName</th>
+          <th scope="col">surname</th>
+          <th scope="col">streetName</th>
+          <th scope="col">houseNumber</th>
+          <th scope="col">houseNumberExtended</th>
+          <th scope="col">addressSupplement</th>
+          <th scope="col">extraAddressInformation</th>
+          <th scope="col">zipCode</th>
+          <th scope="col">city</th>
+          <th scope="col">countryCode</th>
+          <th scope="col">email</th>
+          <th scope="col">company</th>
+          <th scope="col">vatNumber</th>
+          <th scope="col">chamberOfCommerceNumber</th>
+          <th scope="col">orderReference</th>
+          <th scope="col">deliveryPhoneNumber</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in query_results1 %}
+          <tr> 
+              <th scope="row">{{ item.id }}</th>
+              <td>{{ item.shipmentId }}</td>
+              <td>{{ item.salutationCode }}</td>
+              <td>{{ item.firstName }}</td>
+              <td>{{ item.surname }}</td>
+              <td>{{ item.streetName }}</td>
+              <td>{{ item.houseNumber }}</td>
+              <td>{{ item.houseNumberExtended }}</td>
+              <td>{{ item.addressSupplement }}</td>
+              <td>{{ item.extraAddressInformation }}</td>
+              <td>{{ item.zipCode }}</td>
+              <td>{{ item.city }}</td>
+              <td>{{ item.countryCode	}}</td>
+              <td>{{ item.email }}</td>
+              <td>{{ item.company	}}</td>
+              <td>{{ item.vatNumber }}</td>
+              <td>{{ item.chamberOfCommerceNumber }}</td>
+              <td>{{ item.orderReference }}</td>
+              <td>{{ item.deliveryPhoneNumber }}</td>
+
+          </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+<h1 class="align-content-center">Customer Details</h1>
+  <table class="table table-bordered">
+    <thead class="thead-dark">
+      <tr>
+          <th scope="col">#</th>
+          <th scope="col">shipmentId</th>
+          <th scope="col">salutationCode</th>
+          <th scope="col">firstName</th>
+          <th scope="col">surname</th>
+          <th scope="col">streetName</th>
+          <th scope="col">houseNumber</th>
+          <th scope="col">houseNumberExtended</th>
+          <th scope="col">addressSupplement</th>
+          <th scope="col">extraAddressInformation</th>
+          <th scope="col">zipCode</th>
+          <th scope="col">city</th>
+          <th scope="col">countryCode</th>
+          <th scope="col">email</th>
+          <th scope="col">company</th>
+          <th scope="col">vatNumber</th>
+          <th scope="col">chamberOfCommerceNumber</th>
+          <th scope="col">orderReference</th>
+          <th scope="col">deliveryPhoneNumber</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in query_results2 %}
+          <tr> 
+              <th scope="row">{{ item.id }}</th>
+              <td>{{ item.shipmentId }}</td>
+              <td>{{ item.salutationCode }}</td>
+              <td>{{ item.firstName }}</td>
+              <td>{{ item.surname }}</td>
+              <td>{{ item.streetName }}</td>
+              <td>{{ item.houseNumber }}</td>
+              <td>{{ item.houseNumberExtended }}</td>
+              <td>{{ item.addressSupplement }}</td>
+              <td>{{ item.extraAddressInformation }}</td>
+              <td>{{ item.zipCode }}</td>
+              <td>{{ item.city }}</td>
+              <td>{{ item.countryCode	}}</td>
+              <td>{{ item.email }}</td>
+              <td>{{ item.company	}}</td>
+              <td>{{ item.vatNumber }}</td>
+              <td>{{ item.chamberOfCommerceNumber }}</td>
+              <td>{{ item.orderReference }}</td>
+              <td>{{ item.deliveryPhoneNumber }}</td>
+
+          </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock content %}

@@ -1,12 +1,14 @@
 import requests 
 from datetime import datetime, timedelta
-from redis import Redis, StrictRedis
+from redis import Redis
 from rq import Queue
-from rq_scheduler import Scheduler
+import django_rq
+#from rq_scheduler import Scheduler
+r = Redis(host='127.0.0.1', port = 6379, db = 0)
 
-host = "https://login.bol.com/token?grant_type=client_credentials"
-client_id = "86b40eb4-ecf5-4c5d-9c20-bd47e85684b8"
-client_secret = "AU9zaVLOLhua7C3UpJcdmCkWvVZSDn9fh9JGxpXoP6mZYxMRwlBhLQ1sb0VILk7DWsTxM4jKXKZaxWogb0J_NA"
+host = r.get('AUTH_HOST').decode('utf-8')
+client_id = r.get('CLIENT_ID').decode('utf-8')
+client_secret = r.get('CLIENT_SECRET_KEY').decode('utf-8')
 accessToken = None
 accessTokenExpiration = None
 tokenExpiryTime = None
@@ -15,7 +17,7 @@ tokenExpiryTime = None
 
 def getAccessToken():
     #r = StrictRedis(host='localhost', port=6379, db=1)
-    r = Redis(host='127.0.0.1', port = 6379, db = 0)
+    #r = Redis(host='127.0.0.1', port = 6379, db = 0)
     
     payload = 'client_id=' + client_id + '&' + 'client_secret=' + client_secret
     headers = {
@@ -38,11 +40,12 @@ def getAccessToken():
         now += timedelta(seconds=accessTokenExpiration) 
         
         tokenExpiryTime = now
-        refreshToken(accessTokenExpiration)
+        scheduleRefreshToken(accessTokenExpiration)
         
 
-def refreshToken(accessTokenExpiration):
-    scheduler = Scheduler(connection=Redis())
+def scheduleRefreshToken(accessTokenExpiration):
+    #scheduler = Scheduler(connection=Redis())
+    scheduler = django_rq.get_scheduler('high')
     scheduler.enqueue_in(timedelta(seconds=accessTokenExpiration) , getAccessToken)
 
     
