@@ -75,11 +75,3 @@ class Transport(models.Model):
     shippingLabelCode = models.CharField(max_length=30, null=True)
     def __str__(self):
         return self.shipmentId
-
-
-
-class SystemParamaters(models.Model):
-    loginHostURL = models.CharField(max_length=100, null=True)
-    clientID = models.CharField(max_length=200, null=True)
-    clientSecret = models.CharField(max_length=200, null=True)
-    apiHostURL = models.CharField(max_length=100, null=True)

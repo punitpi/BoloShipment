@@ -28,7 +28,9 @@ def fetchShipmentDetails():
         jsonKeys = ['shipmentItems','transport','customerDetails','billingDetails']
         
         for id in ids:
-            url = host + '' + defaultponse.json()
+            url = host + '' + id
+            response = requests.request("GET", url, headers = headers)
+            jsonResponse = response.json()
             now = datetime.now()
             for key in jsonKeys:
                 jsonItems = jsonResponse[key]

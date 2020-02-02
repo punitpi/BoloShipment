@@ -13,12 +13,12 @@ def index(request):
     api.get_secret_setting()
     tr.getAccessToken()
     gs.scheduleShip(1)
-    gsd.scheduleShipdetails(10)  
+    gsd.scheduleShipdetails(1)  
     return render(request, 'shipment/index.html')
 
 def shipdetail(request):
+    gsd.scheduleShipdetails(60)
     gs.getShipments()
-    gsd.scheduleShipdetails(1)
     query_results = Shipments.objects.all()
     return render(request, 'shipment/shipdetail.html', {'query_results': query_results})
 
