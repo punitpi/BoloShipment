@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os, json
 from django.core.exceptions import ImproperlyConfigured
+from redis import Redis
  
 with open(os.path.abspath("django-secrets.json")) as f:
     secrets = json.loads(f.read())
