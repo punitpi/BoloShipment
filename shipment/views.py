@@ -4,13 +4,11 @@ from datetime import datetime, timedelta
 import shipment.tokenRefresh as tr
 import shipment.getShipment as gs
 import shipment.getShipmentDetails as gsd
-import shipment.getAPIHosts as api
 from .models import Shipments, ShipmentItems, BillingDetails, CustomerDetails, Transport
 
 
 # Create your views here.
 def index(request):
-    api.get_secret_setting()
     tr.getAccessToken()
     gs.scheduleShip(1)
     gsd.scheduleShipdetails(1)  
