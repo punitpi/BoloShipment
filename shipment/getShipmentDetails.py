@@ -3,7 +3,6 @@ import json
 from datetime import datetime, timedelta
 from redis import Redis
 from rq import Queue
-#from rq_scheduler import Scheduler
 import django_rq
 from shipment.models import Shipments, ShipmentItems, BillingDetails, CustomerDetails, Transport
 from django.db.models import *
@@ -14,8 +13,7 @@ host = r.get('SHIPMENT_HOST').decode('utf-8')
 
 def fetchShipmentDetails():
     
-    #r = StrictRedis(host='localhost', port=6379, db=1)
-    #r = Redis(host='127.0.0.1', port = 6379, db = 0)
+
     headers = {
     'Accept': 'application/vnd.retailer.v3+json',
     'Authorization': 'Bearer ' + r.get('access_token').decode('utf-8')
@@ -29,6 +27,7 @@ def fetchShipmentDetails():
         
         for id in ids:
             url = host + '' + id
+            r.set('getShipmentDetails','1', 60)
             response = requests.request("GET", url, headers = headers)
             jsonResponse = response.json()
             now = datetime.now()
@@ -41,7 +40,7 @@ def fetchShipmentDetails():
                         flag = ShipmentItems.objects.filter(shipmentId = jsonResponse['shipmentId'], orderItemId = jsonItem['orderItemId'], orderId = jsonItem['orderId'], orderDate = jsonItem['orderDate'], latestDeliveryDate = jsonItem['latestDeliveryDate'], ean = jsonItem['ean'], title = jsonItem['title'], quantity = jsonItem['quantity'], offerPrice = jsonItem['offerPrice'], offerCondition = jsonItem['offerCondition'], fulfilmentMethod = jsonItem['fulfilmentMethod']).exists()
                         if not flag:
                             obj = ShipmentItems.objects.create(shipmentId = jsonResponse['shipmentId'], orderItemId = jsonItem['orderItemId'], orderId = jsonItem['orderId'], orderDate = jsonItem['orderDate'], latestDeliveryDate = jsonItem['latestDeliveryDate'], ean = jsonItem['ean'], title = jsonItem['title'], quantity = jsonItem['quantity'], offerPrice = jsonItem['offerPrice'], offerCondition = jsonItem['offerCondition'], fulfilmentMethod = jsonItem['fulfilmentMethod'])
-                        
+                #Check if it is there in DB and adding if not present        
                 if key == 'transport':
                     val = str(jsonItems)
                     shippingLabelCodetext = '' if val.find('shippingLabelCode') == -1 else jsonItems['shippingLabelCode']
@@ -50,7 +49,7 @@ def fetchShipmentDetails():
                     flag = Transport.objects.filter(shipmentId = jsonResponse['shipmentId'], transportId = jsonItems['transportId'], transporterCode = jsonItems['transporterCode'], trackAndTrace = trackAndTracetext, shippingLabelId = shippingLabelIdtext, shippingLabelCode = shippingLabelCodetext).exists()
                     if not flag:
                         obj = Transport.objects.create(shipmentId = jsonResponse['shipmentId'], transportId = jsonItems['transportId'], transporterCode = jsonItems['transporterCode'], trackAndTrace = trackAndTracetext, shippingLabelId = shippingLabelIdtext, shippingLabelCode = shippingLabelCodetext)
-                    
+                #Check if it is there in DB and adding if not present
                 if key == 'customerDetails':
                     val = str(jsonItems)
                     houseNumberExtendedtext = '' if val.find('houseNumberExtended') == -1 else jsonItems['houseNumberExtended']
@@ -65,6 +64,7 @@ def fetchShipmentDetails():
                     if not flag:
                         obj = CustomerDetails.objects.create(shipmentId = jsonResponse['shipmentId'], salutationCode = jsonItems['salutationCode'], firstName = jsonItems['firstName'], surname = jsonItems['surname'], streetName = jsonItems['streetName'], houseNumber = jsonItems['houseNumber'], houseNumberExtended = houseNumberExtendedtext, addressSupplement = addressSupplementtext, extraAddressInformation = extraAddressInformationtext, zipCode = jsonItems['zipCode'], city = jsonItems['city'], countryCode = jsonItems['countryCode'], email = jsonItems['email'], company = companytext, vatNumber = vatNumbertext, chamberOfCommerceNumber = chamberOfCommerceNumbertext, orderReference = orderReferencetext, deliveryPhoneNumber = deliveryPhoneNumbertext)
                 
+                #Check if it is there in DB and adding if not present
                 if key =='billingDetails':
                     val = str(jsonItems)
                     houseNumberExtendedtext = '' if val.find('houseNumberExtended') == -1 else jsonItems['houseNumberExtended']
@@ -83,10 +83,8 @@ def fetchShipmentDetails():
                 
                     
                 
-        #scheduleShipdetails(now + timedelta(minutes = 1))
         scheduleShipdetails(120)
             
-        
         # optional: raise exception for status code
     except Exception as e:
         print(e)

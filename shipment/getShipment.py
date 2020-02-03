@@ -3,7 +3,6 @@ import json
 from datetime import datetime, timedelta
 from redis import Redis
 from rq import Queue
-#from rq_scheduler import Scheduler
 import django_rq
 from shipment.models import Shipments
 from django.db.models import *
@@ -14,14 +13,13 @@ r = Redis(host='127.0.0.1', port = 6379, db = 0)
 host = r.get('SHIPMENT_HOST').decode('utf-8')
 
 def getShipments():
-    #r = StrictRedis(host='localhost', port=6379, db=1)
-    #r = Redis(host='127.0.0.1', port = 6379, db = 0)
     headers = {
     'Accept': 'application/vnd.retailer.v3+json',
     'Authorization': 'Bearer ' + r.get('access_token').decode('utf-8')
     }
     try:
         now = datetime.now()
+        r.set('getShipment','1', 60)
         response = requests.request("GET", host, headers = headers)
        
         # optional: raise exception for status code
